@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-//Alamofire gitCheck
+//  Alamofire gitCheck
 struct Character: Decodable {
     let char: String?
     let radical: String?
