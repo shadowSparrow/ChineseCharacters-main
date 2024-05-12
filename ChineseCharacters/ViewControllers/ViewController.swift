@@ -101,7 +101,7 @@ class ViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.spacing = 0
         stackView.distribution = .fillEqually
-        stackView.isHidden = true
+        stackView.isHidden = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -155,8 +155,8 @@ class ViewController: UIViewController {
             characterDataStackView.widthAnchor.constraint(equalToConstant: viewWindth),
             characterDataStackView.heightAnchor.constraint(equalToConstant: 80),
             characterDataStackView.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            characterDataStackView.bottomAnchor.constraint(equalTo: stringsStackView.topAnchor)
-        
+            characterDataStackView.bottomAnchor.constraint(equalTo: stringsStackView.topAnchor),
+            
              ])
     }
     
