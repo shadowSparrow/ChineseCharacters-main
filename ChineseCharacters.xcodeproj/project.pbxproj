@@ -19,6 +19,11 @@
 		049ED65E2ADC67A600DE4A4B /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049ED65D2ADC67A600DE4A4B /* Character.swift */; };
 		049ED6602ADD607500DE4A4B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049ED65F2ADD607500DE4A4B /* Helpers.swift */; };
 		04C8DB132AE9AFB5002E6A76 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C8DB122AE9AFB5002E6A76 /* CollectionViewCell.swift */; };
+		04D063E62BEECE1A00378105 /* StrokesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D063E52BEECE1A00378105 /* StrokesViewController.swift */; };
+		04D063EA2BF0184F00378105 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 04D063E92BF0184F00378105 /* index.html */; };
+		04D063EC2BF0188B00378105 /* demo.js in Resources */ = {isa = PBXBuildFile; fileRef = 04D063EB2BF0188B00378105 /* demo.js */; };
+		04D063EE2BF018AB00378105 /* hanzi-writer.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 04D063ED2BF018AB00378105 /* hanzi-writer.min.js */; };
+		04D063F02BF018C900378105 /* jquery.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 04D063EF2BF018C900378105 /* jquery.min.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +40,11 @@
 		049ED65D2ADC67A600DE4A4B /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		049ED65F2ADD607500DE4A4B /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		04C8DB122AE9AFB5002E6A76 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		04D063E52BEECE1A00378105 /* StrokesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokesViewController.swift; sourceTree = "<group>"; };
+		04D063E92BF0184F00378105 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		04D063EB2BF0188B00378105 /* demo.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = demo.js; sourceTree = "<group>"; };
+		04D063ED2BF018AB00378105 /* hanzi-writer.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "hanzi-writer.min.js"; sourceTree = "<group>"; };
+		04D063EF2BF018C900378105 /* jquery.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = jquery.min.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,9 +82,9 @@
 				0492B0882AD99A2200FCF487 /* SceneDelegate.swift */,
 				049ED65F2ADD607500DE4A4B /* Helpers.swift */,
 				0493C07B2AE3EAAF00BD5427 /* NetworkingManager.swift */,
-				0492B08A2AD99A2200FCF487 /* ViewController.swift */,
-				0472B8C12AE8497900992D78 /* CollectionViewController.swift */,
+				04D063E72BF017FA00378105 /* ViewControllers */,
 				04C8DB122AE9AFB5002E6A76 /* CollectionViewCell.swift */,
+				04D063E82BF0182400378105 /* Web */,
 				049ED65D2ADC67A600DE4A4B /* Character.swift */,
 				0492B08C2AD99A2200FCF487 /* Main.storyboard */,
 				0492B08F2AD99A2400FCF487 /* Assets.xcassets */,
@@ -82,6 +92,27 @@
 				0492B0942AD99A2400FCF487 /* Info.plist */,
 			);
 			path = ChineseCharacters;
+			sourceTree = "<group>";
+		};
+		04D063E72BF017FA00378105 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				0492B08A2AD99A2200FCF487 /* ViewController.swift */,
+				0472B8C12AE8497900992D78 /* CollectionViewController.swift */,
+				04D063E52BEECE1A00378105 /* StrokesViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		04D063E82BF0182400378105 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				04D063E92BF0184F00378105 /* index.html */,
+				04D063EB2BF0188B00378105 /* demo.js */,
+				04D063ED2BF018AB00378105 /* hanzi-writer.min.js */,
+				04D063EF2BF018C900378105 /* jquery.min.js */,
+			);
+			path = Web;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,7 +180,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0492B0932AD99A2400FCF487 /* LaunchScreen.storyboard in Resources */,
+				04D063EA2BF0184F00378105 /* index.html in Resources */,
+				04D063F02BF018C900378105 /* jquery.min.js in Resources */,
+				04D063EE2BF018AB00378105 /* hanzi-writer.min.js in Resources */,
 				0492B0902AD99A2400FCF487 /* Assets.xcassets in Resources */,
+				04D063EC2BF0188B00378105 /* demo.js in Resources */,
 				0492B08E2AD99A2200FCF487 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,6 +197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0492B08B2AD99A2200FCF487 /* ViewController.swift in Sources */,
+				04D063E62BEECE1A00378105 /* StrokesViewController.swift in Sources */,
 				0492B0872AD99A2200FCF487 /* AppDelegate.swift in Sources */,
 				04C8DB132AE9AFB5002E6A76 /* CollectionViewCell.swift in Sources */,
 				0492B0892AD99A2200FCF487 /* SceneDelegate.swift in Sources */,

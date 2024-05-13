@@ -22,6 +22,7 @@ class ViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 120.0)
         label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
@@ -106,6 +107,15 @@ class ViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var button: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .blue
+        button.setTitle("Quiz", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(showQuizVC), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
@@ -123,6 +133,7 @@ class ViewController: UIViewController {
         characterDataStackView.addArrangedSubview(radicalLabel)
         characterDataStackView.addArrangedSubview(strokesLabel)
         characterView.addSubview(characterDataStackView)
+        self.view.addSubview(button)
         self.view.addSubview(characterView)
         
         //setConstraints
@@ -157,6 +168,11 @@ class ViewController: UIViewController {
             characterDataStackView.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
             characterDataStackView.bottomAnchor.constraint(equalTo: stringsStackView.topAnchor),
             
+            button.widthAnchor.constraint(equalToConstant: viewWindth),
+            button.heightAnchor.constraint(equalToConstant: 50),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.topAnchor.constraint(equalTo: characterDataStackView.bottomAnchor,constant: 50),
+            
              ])
     }
     
@@ -168,6 +184,13 @@ class ViewController: UIViewController {
             self.strokesLabel.text = character.totalstrokes
             self.readingLabel.text = character.readings?.mandarinpinyin?.first
         }
+    }
+    
+    @objc func showQuizVC() {
+        let destinationVC = StrokesViewController()
+        
+        destinationVC.character = character
+        self.navigationController?.pushViewController(destinationVC, animated: true)
     }
 }
 

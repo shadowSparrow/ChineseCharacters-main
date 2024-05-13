@@ -66,7 +66,6 @@ class CollectionViewController: UICollectionViewController {
         
         let destinationVC = ViewController()
         destinationVC.character = cell.characterLabel.text ?? "Nil passed"
-        
         self.navigationController?.pushViewController(destinationVC, animated: true)
 
     }
