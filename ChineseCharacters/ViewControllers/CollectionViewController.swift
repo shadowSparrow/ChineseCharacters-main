@@ -14,6 +14,19 @@ class CollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Collection"
+        self.navigationController?.navigationBar.barStyle = .black
+        
+        /*
+         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+         self.navigationController.navigationBar.titleTextAttributes = titleDict
+         */
+        let titleDict: NSDictionary = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = titleDict as! [NSAttributedString.Key : Any]
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        self.collectionView.collectionViewLayout = layout
+        self.collectionView.backgroundColor = .black
         self.collectionView!.register(CollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(pressGestureAction))
         collectionView.addGestureRecognizer(longPressGesture)
@@ -72,7 +85,6 @@ class CollectionViewController: UICollectionViewController {
 }
 
 extension CollectionViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
@@ -87,7 +99,7 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
         let pureWindth = Int(collectionViewWindth) - allInsets
         let itemWindth = pureWindth/4
         
-        return CGSize(width: itemWindth, height: itemWindth)
+        return CGSize(width: itemWindth, height: itemWindth*Int(1.5))
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -97,5 +109,4 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         10
     }
-    
 }

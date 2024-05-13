@@ -10,6 +10,12 @@ import Alamofire
 
 class ViewController: UIViewController {
     
+    /*
+    self.layer.cornerRadius = 20
+    self.layer.borderWidth = 3
+    self.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+    self.backgroundColor = .black
+    */
     var character: String?
     
     private let characterLabel: UILabel = {
@@ -17,7 +23,7 @@ class ViewController: UIViewController {
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 5
         label.textColor = .white
-        label.backgroundColor = .blue
+        label.backgroundColor = .clear
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 120.0)
         label.text = ""
@@ -31,7 +37,7 @@ class ViewController: UIViewController {
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 5
         label.textColor = .white
-        label.backgroundColor = .blue
+        label.backgroundColor = .clear
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 36.0)
         label.text = ""
@@ -41,8 +47,10 @@ class ViewController: UIViewController {
     
      private let characterView: UIView = {
         let view = UIView()
-        view.backgroundColor = .blue
-         view.layer.cornerRadius = 5
+        view.backgroundColor = .clear
+         view.layer.cornerRadius = 20
+         view.layer.borderWidth = 3
+         view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
          view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -51,7 +59,7 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 50)
-        label.backgroundColor = .blue
+        label.backgroundColor = .clear
         label.textColor = .white
         return label
     }()
@@ -60,7 +68,7 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 50)
-        label.backgroundColor = .blue
+        label.backgroundColor = .clear
         label.textColor = .white
         return label
     }()
@@ -68,6 +76,7 @@ class ViewController: UIViewController {
     private let characterDataStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
+        stackView.layer.backgroundColor = UIColor.black.cgColor
         stackView.spacing = 0
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -77,7 +86,7 @@ class ViewController: UIViewController {
     //MARK: TODO
     private let strokesString: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .blue
+        label.backgroundColor = .clear
         label.textColor = .white
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20)
@@ -88,7 +97,7 @@ class ViewController: UIViewController {
     
     private let radicalString: UILabel = {
         let label = UILabel()
-        label.backgroundColor = .blue
+        label.backgroundColor = .clear
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20)
         label.textColor = .white
@@ -109,7 +118,10 @@ class ViewController: UIViewController {
     
     private lazy var button: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
+        button.backgroundColor = .clear
+        button.layer.borderWidth = 3
+        button.layer.cornerRadius = 20
+        button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         button.setTitle("Quiz", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(showQuizVC), for: .touchUpInside)

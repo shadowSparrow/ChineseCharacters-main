@@ -14,15 +14,23 @@ class StrokesViewController: UIViewController {
     
     private let webView: WKWebView = {
         let webView = WKWebView()
+        webView.layer.masksToBounds = true
+        webView.isOpaque = false
+        webView.layer.backgroundColor = UIColor.black.cgColor
         webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.layer.cornerRadius=20
+        webView.layer.cornerRadius = 20
+        webView.layer.borderWidth = 3
+        webView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         return webView
     }()
     
     
     private lazy var button: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 20
+        button.layer.borderWidth = 3
+        button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         button.setTitle("Start", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(newCharacter), for: .touchUpInside)
@@ -66,14 +74,14 @@ class StrokesViewController: UIViewController {
         button.widthAnchor.constraint(equalToConstant: screenWindth).isActive = true
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        button.topAnchor.constraint(equalTo: webView.bottomAnchor).isActive = true
+        button.topAnchor.constraint(equalTo: webView.bottomAnchor, constant: 30).isActive = true
     }
     
     @objc func newCharacter() {
         webView.evaluateJavaScript("newCharacter('\(self.character ?? "水")')") { result, error in
             if error == nil {
             }
-            self.button.backgroundColor = .lightGray
+            self.button.backgroundColor = .darkGray
             self.button.isEnabled = false
         }
 

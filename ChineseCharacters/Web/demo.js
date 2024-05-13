@@ -6,6 +6,7 @@ function newWriter(character) {
                                 showOutline: true,
                                 showCharacter: true,
                                 showHintAfterMisses: 1,
+                                highlightOnComplete: true,
                                 });
 }
 
@@ -22,7 +23,14 @@ function newCharacter(character) {
     writer = HanziWriter.create('character-target-div', character, {
     width: 300,
     height: 300,
+    showOutline: true,
+    showCharacter: true,
+    highlightCompleteColor:'#FFFFFF',
+    outlineColor: '#AB8B00',
+    drawingColor: '#FFFFFF',
+    strokeColor: '#FFFFFF',
     showHintAfterMisses: 1,
+    highlightOnComplete: true,
     
     });
     writer.quiz({
@@ -30,7 +38,7 @@ function newCharacter(character) {
     resetWriter();
     }
     });
-    window.writer = writer
+    //window.writer = writer
 }
 
 function changeCharacter(newCharacter) {

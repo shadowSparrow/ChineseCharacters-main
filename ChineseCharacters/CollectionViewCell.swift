@@ -21,7 +21,9 @@ class CollectionViewCell: UICollectionViewCell {
         
         super.init(frame: frame)
         self.layer.cornerRadius = 20
-        self.backgroundColor = .blue
+        self.layer.borderWidth = 3
+        self.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        self.backgroundColor = .black
         
         setUIElemets()
         
