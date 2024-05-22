@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         
         let layout = UICollectionViewFlowLayout()
-        let rootVC = CollectionViewController(collectionViewLayout: layout)
+        let rootVC = WordsCollectionViewController(collectionViewLayout: layout)
         let navigationController = UINavigationController(rootViewController: rootVC)
         
         window?.rootViewController = navigationController

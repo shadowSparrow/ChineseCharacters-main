@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct WordModel {
+    var character: String
+    var pingYing: String
+    var translation: String
+}

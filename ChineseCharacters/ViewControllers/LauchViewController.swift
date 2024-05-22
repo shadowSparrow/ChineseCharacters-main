@@ -8,22 +8,35 @@
 import UIKit
 
 class LauchViewController: UIViewController {
-
+    private lazy var viewToAnimate: UIImageView = {
+        let view = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        view.center.x = self.view.center.x-300
+        view.center.y = self.view.center.y-100
+        view.backgroundColor = .blue
+        let image=UIImage(named: "logo")
+        view.image=image
+        view.layer.cornerRadius=50
+        //view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.view.backgroundColor = .black
+        setUIElements()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func setUIElements() {
+        self.view.addSubview(viewToAnimate)
+        UIView.animate(withDuration: 2, delay: 2, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2) {
+            self.viewToAnimate.center.x=self.view.center.x
+        } completion: { bool in
+            let layout = UICollectionViewFlowLayout()
+            let destionationVC = CollectionViewController(collectionViewLayout: layout)
+            self.navigationController?.pushViewController(destionationVC, animated: true)
+        }
     }
-    */
-
 }
+
+
+/*
+
+ */

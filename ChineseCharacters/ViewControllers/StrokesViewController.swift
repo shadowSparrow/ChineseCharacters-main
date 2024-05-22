@@ -53,6 +53,10 @@ class StrokesViewController: UIViewController {
         setUIElements()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        animateLayout()
+    }
+    
     func setUIElements() {
         
         self.view.addSubview(webView)
@@ -61,7 +65,6 @@ class StrokesViewController: UIViewController {
         if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
             webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
         }
-        
         
         let screenWindth = UIScreen.main.bounds.width-70
         let screenHeight = UIScreen.main.bounds.height-500
@@ -78,13 +81,15 @@ class StrokesViewController: UIViewController {
     }
     
     @objc func newCharacter() {
-        webView.evaluateJavaScript("newCharacter('\(self.character ?? "水")')") { result, error in
-            if error == nil {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            self.button.transform = CGAffineTransform(scaleX: 0.9 , y: 0.9)
+        }completion: { bool in
+            self.webView.evaluateJavaScript("newCharacter('\(self.character ?? "水")')") { result, error in
+                if error == nil {
+                }
+                self.button.isEnabled = false
             }
-            self.button.backgroundColor = .darkGray
-            self.button.isEnabled = false
         }
-
     }
     
     func newQuizz() {
@@ -92,6 +97,16 @@ class StrokesViewController: UIViewController {
             if error == nil {
             }
             self.button.isHidden = true
+        }
+    }
+    
+    private func animateLayout() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            self.button.transform = CGAffineTransform(scaleX: 0.9 , y: 0.9)
+        } completion: { bool in
+            UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+                self.button.transform = CGAffineTransform(scaleX: 1 , y: 1)
+            }
         }
     }
 }

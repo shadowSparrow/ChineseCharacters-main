@@ -1,88 +1,79 @@
-//
-//  WordsCollectionCollectionViewController.swift
-//  ChineseCharacters
-//
-//  Created by mac on 20.05.2024.
-//
-
 import UIKit
+import AVFoundation
 
-private let reuseIdentifier = "Cell"
+private let reuseIdentifier = "cell"
 
-class WordsCollectionCollectionViewController: UICollectionViewController {
-
+class WordsCollectionViewController: UICollectionViewController {
+    
+    //@IBOutlet weak var pageControl: UIPageControl!
+    
+    var currentPage: Int = 0
+    var words: [Word] = Word.getWords()
+    var text: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
+        self.title = text
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        self.collectionView.collectionViewLayout = layout
+        self.collectionView.isPagingEnabled = true
+        
+        self.collectionView.backgroundColor = .black
+        self.collectionView!.register(WordsCollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
+    
     // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
+         words.count
     }
-
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
-        // Configure the cell
-    
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! WordsCollectionViewCell
+        let word = words[indexPath.row]
+        cell.setWord(word: word)
         return cell
     }
-
     // MARK: UICollectionViewDelegate
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! WordsCollectionViewCell
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            cell.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
+         
+        } completion: { bool in
+            UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState) {
+                
+                cell.transform=CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+                
+                if cell.word?.isFlipped==false {
+                    cell.flipCard()
+                    cell.word?.isFlipped=true
+                } else {
+                    cell.flipBack()
+                    cell.word?.isFlipped=false
+                }
+            }
+                    }
 
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
+                  }
+                
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let windth = scrollView.frame.width
+        currentPage = Int(scrollView.contentOffset.x/windth)
     }
-    */
+}
 
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+extension WordsCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let windth = collectionView.frame.width
+        let height = UIScreen.main.bounds.height-300
+        return CGSize(width: windth, height: height)
     }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        0
     }
-    */
-
 }

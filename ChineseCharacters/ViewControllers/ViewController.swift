@@ -10,12 +10,6 @@ import Alamofire
 
 class ViewController: UIViewController {
     
-    /*
-    self.layer.cornerRadius = 20
-    self.layer.borderWidth = 3
-    self.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-    self.backgroundColor = .black
-    */
     var character: String?
     
     private let characterLabel: UILabel = {
@@ -54,7 +48,6 @@ class ViewController: UIViewController {
          view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     private let radicalLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -63,7 +56,6 @@ class ViewController: UIViewController {
         label.textColor = .white
         return label
     }()
-    
     private let strokesLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
@@ -72,7 +64,6 @@ class ViewController: UIViewController {
         label.textColor = .white
         return label
     }()
-    
     private let characterDataStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -82,7 +73,6 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
     //MARK: TODO
     private let strokesString: UILabel = {
         let label = UILabel()
@@ -94,7 +84,6 @@ class ViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
     private let radicalString: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
@@ -105,7 +94,6 @@ class ViewController: UIViewController {
         label.text = "radical"
         return label
     }()
-    
     private let stringsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -115,7 +103,6 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
     private lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
@@ -127,12 +114,14 @@ class ViewController: UIViewController {
         button.addTarget(self, action: #selector(showQuizVC), for: .touchUpInside)
         return button
     }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
         setUIElements()
         alamofireGetMethod()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        animateLayout()
     }
     
     //MARK: CreateUI
@@ -187,7 +176,6 @@ class ViewController: UIViewController {
             
              ])
     }
-    
     func alamofireGetMethod() {
         guard let character = character else {return}
         NetworkingManager.shared.alamofireGetMethod(character: character) { character in
@@ -197,12 +185,24 @@ class ViewController: UIViewController {
             self.readingLabel.text = character.readings?.mandarinpinyin?.first
         }
     }
-    
     @objc func showQuizVC() {
-        let destinationVC = StrokesViewController()
-        
-        destinationVC.character = character
-        self.navigationController?.pushViewController(destinationVC, animated: true)
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            self.button.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+            self.button.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
+        }) { bool in
+            let destinationVC = StrokesViewController()
+            destinationVC.character = self.character
+            self.navigationController?.pushViewController(destinationVC, animated: true)
+            }
+    }
+    private func animateLayout() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            self.button.transform = CGAffineTransform(scaleX: 0.9 , y: 0.9)
+        } completion: { bool in
+            UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+                self.button.transform = CGAffineTransform(scaleX: 1 , y: 1)
+            }
+        }
     }
 }
 

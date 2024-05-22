@@ -7,29 +7,21 @@
 
 import Foundation
 
-class Word {
+struct Word {
     let name: String
-    let imageName: String
     let pingYing: String
     let translation: String
     var isFlipped: Bool = false
-    init(name: String, imageName: String, pingYing: String, translation: String) {
-        self.name = name
-        self.imageName = imageName
-        self.pingYing = pingYing
-        self.translation = translation
-    }
 }
 
-/*
-extension Character {
-    static func getCharacters(charactersData:[CharacterData]) -> [Character] {
-        var characters:[Character] = []
-        for character in charactersData {
-        let currentCharacter = Character(name: character.character, imageName: character.imageName, pingYing: character.pingYing, translation: character.translation)
-            characters.append(currentCharacter)
+
+extension Word {
+    static func getWords() -> [Word] {
+        var words: [Word] = DataManager.shared.familyCharacters
+        for word in words {
+            let currentWord = Word(name: word.name, pingYing: word.pingYing, translation: word.translation)
+            words.append(currentWord)
         }
-        return characters
+        return words
              }
 }
-*/

@@ -14,15 +14,10 @@ class CollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Collection"
-        self.navigationController?.navigationBar.barStyle = .black
-        
-        /*
-         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-         self.navigationController.navigationBar.titleTextAttributes = titleDict
-         */
         let titleDict: NSDictionary = [NSAttributedString.Key.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.titleTextAttributes = titleDict as! [NSAttributedString.Key : Any]
-        
+        self.navigationItem.setHidesBackButton(true, animated: true)
+                
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         self.collectionView.collectionViewLayout = layout
@@ -31,8 +26,12 @@ class CollectionViewController: UICollectionViewController {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(pressGestureAction))
         collectionView.addGestureRecognizer(longPressGesture)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        animateLayout()
+    }
+    
 
-  
     @objc func pressGestureAction(_ gesture: UILongPressGestureRecognizer) {
         let gestureLocation = gesture.location(in: collectionView)
         switch gesture.state {
@@ -77,11 +76,30 @@ class CollectionViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
         
-        let destinationVC = ViewController()
-        destinationVC.character = cell.characterLabel.text ?? "Nil passed"
-        self.navigationController?.pushViewController(destinationVC, animated: true)
-
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            cell.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+            cell.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
+        }) { bool in
+            let destinationVC = ViewController()
+            destinationVC.character = cell.characterLabel.text ?? "Nil passed"
+            self.navigationController?.pushViewController(destinationVC, animated: true)
+            }
     }
+    
+    private func animateLayout() {
+        UICollectionView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            for cell in self.collectionView.visibleCells {
+                cell.transform = CGAffineTransform(scaleX: 0.9 , y: 0.9)
+            }
+        } completion: { bool in
+            UICollectionView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+                for cell in self.collectionView.visibleCells {
+                    cell.transform = CGAffineTransform(scaleX: 1 , y: 1)
+                }
+            }
+        }
+    }
+    
 }
 
 extension CollectionViewController: UICollectionViewDelegateFlowLayout {
@@ -110,3 +128,17 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
         10
     }
 }
+
+/*
+ 
+     
+     
+     UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+         cell.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
+         cell.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
+     }) { bool in
+         
+         }
+     
+ 
+ */
