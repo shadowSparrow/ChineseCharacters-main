@@ -30,7 +30,6 @@ class CollectionViewController: UICollectionViewController {
     override func viewDidAppear(_ animated: Bool) {
         animateLayout()
     }
-    
 
     @objc func pressGestureAction(_ gesture: UILongPressGestureRecognizer) {
         let gestureLocation = gesture.location(in: collectionView)
