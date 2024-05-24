@@ -9,6 +9,8 @@ import AVFoundation
 
 class WordsCollectionViewCell: UICollectionViewCell {
     
+    var word: Word?
+    
     private let characterView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -59,12 +61,18 @@ class WordsCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let playButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .clear
+        button.setTitle("Play", for: .normal)
+        button.layer.cornerRadius = 10
+        button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        button.layer.borderWidth = 3
+        button.addTarget(self, action: #selector(playButtonAction), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
-    
-    @IBOutlet weak var playButton: UIButton!
-    
-    var player: AVAudioPlayer?
-    var word: Word?
     
     func setWord(word:Word){
         self.word = word
@@ -78,6 +86,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         self.characterView.addSubview(wordLabel)
         self.characterView.addSubview(pingYingLabel)
         self.characterView.addSubview(translationLabel)
+        self.characterView.addSubview(playButton)
         
         // Constraints
         characterView.widthAnchor.constraint(equalToConstant: self.frame.width-20).isActive=true
@@ -97,6 +106,11 @@ class WordsCollectionViewCell: UICollectionViewCell {
         translationLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
         translationLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 100).isActive=true
         
+        playButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100).isActive=true
+        playButton.heightAnchor.constraint(equalToConstant: 50).isActive=true
+        playButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
+        playButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 170).isActive=true
+        
         
         if word.isFlipped == true {
             UIView.transition(from: characterView, to: detailView, duration: 0, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
@@ -110,38 +124,6 @@ class WordsCollectionViewCell: UICollectionViewCell {
         
     }
     
-    /*
-     func setWords(word: Word) {
-     
-     self.word = word
-     self.layer.cornerRadius = 5
-     //CharacterViewSettings
-     self.characterLabel.text = word.name
-     self.characterView.layer.cornerRadius = 5
-     self.characterView.layer.shadowOffset = CGSize(width: 0, height: 3 )
-     self.characterView.layer.shadowOpacity = 1.0
-     self.characterView.layer.shadowRadius = 2
-     self.characterView.layer.shadowColor = UIColor.green.cgColor
-     
-     //DetailViewSettings
-     
-     self.detailView.layer.cornerRadius = 5
-     self.PingYingLabel.text = word.pingYing
-     self.PingYingLabel.isHidden = true
-     self.detailTranslationLabel.layer.cornerRadius = 0
-     self.detailTranslationLabel.text = word.translation
-     self.detailTranslationLabel.isHidden = true
-     
-     self.playButton.layer.borderWidth = 0.5
-     self.playButton.layer.borderColor = UIColor.white.cgColor
-     self.playButton.layer.cornerRadius = 2
-     
-     
-     }
-     
-     */
-    
-    
     func flipCard() {
         UIView.transition(from: characterView, to: detailView, duration: 0.5, options: [.transitionFlipFromLeft,.showHideTransitionViews], completion: nil)
     }
@@ -150,32 +132,27 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func playButtonAction(_ sender: Any) {
-        /*
-         UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
-         self.playButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-         
-         } completion: { bool in
-         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-         self.playButton.transform = CGAffineTransform(scaleX: 1, y: 1)
-         }) { bool in
-         UIView.animate(withDuration: 0.2, animations:  {
-         self.PingYingLabel.isHidden = false
-         self.detailTranslationLabel.isHidden = false
-         }) { bool in
-         UIView.animate(withDuration: 0.2, delay: 2.0) {
-         self.PingYingLabel.isHidden = true
-         self.detailTranslationLabel.isHidden = true
-         }
-         }
-         }
-         }
-         playsound(name: word?.name ?? "")
-         }
-         */
         
-        func playsound(name: String) {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
             
+            self.playButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        } completion: { bool in
+            
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                
+                self.playButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+            }) { bool in
+                
+                UIView.animate(withDuration: 0.2, animations:  {
+                    
+                }) { bool in
+                    
+                    UIView.animate(withDuration: 0.2, delay: 2.0) {
+                        
+
+                    }
+                }
+            }
         }
     }
-    
 }
