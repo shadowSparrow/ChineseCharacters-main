@@ -14,7 +14,6 @@ struct Word {
     var isFlipped: Bool = false
 }
 
-
 extension Word {
     static func getWords() -> [Word] {
         var words: [Word] = DataManager.shared.familyCharacters
