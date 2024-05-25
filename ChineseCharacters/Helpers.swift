@@ -54,7 +54,7 @@ class DataManager {
         Word(name: "儿子",  pingYing: "érzi", translation: "son"),
         Word(name: "朋友", pingYing: "péngyou", translation: "friend"),
         Word(name: "人",  pingYing: "rén", translation: "human" ),
-        Word(name: "岁",  pingYing: "suì", translation: "age"),
+        Word(name: "岁数",  pingYing: "suì(shu)", translation: "age"),
         Word(name: "先生",  pingYing: "xiānsheng", translation: "Mr"),
         Word(name: "小姐",  pingYing: "xiǎojiě", translation: "Miss")
     ]

@@ -9,9 +9,22 @@ import UIKit
 
 class TabBarController: UITabBarController {
 
+    let characterVC = UINavigationController(rootViewController: CollectionViewController(collectionViewLayout: UICollectionViewFlowLayout()))
+    let wordVC = UINavigationController(rootViewController: WordsCollectionViewController(collectionViewLayout: UICollectionViewFlowLayout()))
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.tabBar.isTranslucent = false
+        self.tabBar.tintColor = .white
+        self.tabBar.barStyle = .black
+        characterVC.tabBarItem = UITabBarItem(title: "Characters", image: .init(systemName: "pencil"), tag: 0)
+        wordVC.tabBarItem = UITabBarItem(title: "Words", image: .init(systemName: "lanyardcard"), tag: 1)
+        
+        
+        self.viewControllers = [characterVC, wordVC]
         // Do any additional setup after loading the view.
     }
     

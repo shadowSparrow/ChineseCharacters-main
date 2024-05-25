@@ -12,7 +12,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     var word: Word?
     var synthesizer = AVSpeechSynthesizer()
-    
+    let volume: Float = 1.0
     var audioEngine: AVAudioEngine = AVAudioEngine()
     let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
     let request = SFSpeechAudioBufferRecognitionRequest()
@@ -44,6 +44,9 @@ class WordsCollectionViewCell: UICollectionViewCell {
         label.font = UIFont.systemFont(ofSize: 120)
         label.textAlignment = .center
         label.textColor = .white
+        label.layer.cornerRadius = 5
+        //label.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        //label.layer.borderWidth = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -139,7 +142,6 @@ class WordsCollectionViewCell: UICollectionViewCell {
         speakButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
         speakButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 190).isActive=true
         
-        
         if word.isFlipped == true {
             UIView.transition(from: characterView, to: detailView, duration: 0, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
             }
@@ -167,18 +169,18 @@ class WordsCollectionViewCell: UICollectionViewCell {
             let utterance = AVSpeechUtterance(string: self.wordLabel.text ?? "风景")
             utterance.voice = AVSpeechSynthesisVoice(language: "zh-CN")
             utterance.rate = 0.1
+            utterance.volume = self.volume
             self.synthesizer.speak(utterance)
             
         } completion: { bool in
             UIView.animate(withDuration: 2, delay: 0, options: .curveEaseInOut, animations: {
                 self.playButton.transform = CGAffineTransform(scaleX: 1, y: 1)
-                
             }) { bool in
                 UIView.animate(withDuration: 1,  animations:  {
-                    
                 }) { bool in
                     UIView.animate(withDuration: 0.2, delay: 2.0) {
                         self.pingYingLabel.isHidden=true
+                        
                     }
                 }
             }
@@ -186,12 +188,22 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func speakButtonAction(_ sender: Any) {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+        UIView.animate(withDuration: 4, delay: 0, options: .beginFromCurrentState) {
             self.speakButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
             self.pingYingLabel.isHidden = false
-            self.pingYingLabel.isHighlighted = true
             
-            
+            let audioSession = AVAudioSession.sharedInstance()  //2
+                do
+                {
+                    try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+                    try audioSession.setMode(AVAudioSession.Mode.default)
+                    try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+                }
+                catch
+                {
+                    print("audioSession properties weren't set because of an error.")
+                }
             
             let node = self.audioEngine.inputNode
             let recordingFormat = node.outputFormat(forBus: 0)
@@ -206,8 +218,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
                     return print(error)
                 }
             
-            guard let myReconizer = SFSpeechRecognizer() else {return}
-            if !myReconizer.isAvailable {return}
+           
             
             self.recognitionTask = self.speechRecognizer?.recognitionTask(with: self.request, resultHandler: { result, error in
                 if let result = result {
@@ -219,51 +230,46 @@ class WordsCollectionViewCell: UICollectionViewCell {
                         lastString=bestString.substring(from: indexTo)
                         print(lastString)
                     }
-                    if lastString == self.wordLabel.text {
+                    if bestString == self.wordLabel.text {
                         self.checkTheColorSaid(resultString: "green")
                     } else {
-                        self.checkTheColorSaid(resultString: "red")
+                        self.checkTheColorSaid(resultString: "white")
                     }
                 } else if let error = error {
                     print(error)
                 }
             })
             
-            
         } completion: { bool in
-            UIView.animate(withDuration: 2.0, delay: 0, options: .curveEaseInOut, animations: {
+            
+            UIView.animate(withDuration: 1.0, delay: 0, options: .curveEaseInOut, animations: {
                 
                 self.speakButton.transform = CGAffineTransform(scaleX: 1, y: 1)
-                self.pingYingLabel.isHighlighted = false
+                self.pingYingLabel.isHidden=true
+                self.stopRecording()
                 
-            }) { bool in
-                UIView.animate(withDuration: 0.2, animations:  {
-                }) { bool in
-                    UIView.animate(withDuration: 0.2, delay: 4.0) {
-                        self.pingYingLabel.isHidden=true
-                        self.stopRecording()
-                    }
-                }
-            }
+            })
+            
         }
+        
     }
     
     func checkTheColorSaid(resultString: String) {
         switch resultString{
         case "red":
-            wordLabel.backgroundColor = .red
+            wordLabel.textColor = .red
         case "green":
-            wordLabel.backgroundColor = .green
+            wordLabel.textColor = .green
+        case "white":
+            wordLabel.textColor = .white
         default: break
         }
     }
-    
     
     func stopRecording() {
                 self.audioEngine.stop()
                 self.request.endAudio()
                 self.recognitionTask?.cancel()
-                //self.request = nil
                 self.recognitionTask = nil
                 self.audioEngine.inputNode.removeTap(onBus: 0)
     }

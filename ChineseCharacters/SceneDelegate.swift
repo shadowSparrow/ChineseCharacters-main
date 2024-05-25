@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootVC = WordsCollectionViewController(collectionViewLayout: layout)
         let navigationController = UINavigationController(rootViewController: rootVC)
         
-        window?.rootViewController = navigationController
+        window?.rootViewController = TabBarController()
         window?.makeKeyAndVisible()
     }
 

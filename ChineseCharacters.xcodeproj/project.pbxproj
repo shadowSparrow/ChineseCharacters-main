@@ -22,6 +22,7 @@
 		0493C07C2AE3EAAF00BD5427 /* NetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0493C07B2AE3EAAF00BD5427 /* NetworkingManager.swift */; };
 		049ED65E2ADC67A600DE4A4B /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049ED65D2ADC67A600DE4A4B /* Character.swift */; };
 		049ED6602ADD607500DE4A4B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049ED65F2ADD607500DE4A4B /* Helpers.swift */; };
+		04B04ADF2C014402000047D1 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B04ADE2C014402000047D1 /* TabBarController.swift */; };
 		04C8DB132AE9AFB5002E6A76 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C8DB122AE9AFB5002E6A76 /* CollectionViewCell.swift */; };
 		04D063E62BEECE1A00378105 /* StrokesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D063E52BEECE1A00378105 /* StrokesViewController.swift */; };
 		04D063EA2BF0184F00378105 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 04D063E92BF0184F00378105 /* index.html */; };
@@ -48,6 +49,7 @@
 		0493C07B2AE3EAAF00BD5427 /* NetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManager.swift; sourceTree = "<group>"; };
 		049ED65D2ADC67A600DE4A4B /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		049ED65F2ADD607500DE4A4B /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		04B04ADE2C014402000047D1 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		04C8DB122AE9AFB5002E6A76 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		04D063E52BEECE1A00378105 /* StrokesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokesViewController.swift; sourceTree = "<group>"; };
 		04D063E92BF0184F00378105 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 			children = (
 				04EFBAA62BF4462800AE3375 /* LauchViewController.swift */,
 				0492B08A2AD99A2200FCF487 /* ViewController.swift */,
+				04B04ADE2C014402000047D1 /* TabBarController.swift */,
 				0472B8C12AE8497900992D78 /* CollectionViewController.swift */,
 				04D063E52BEECE1A00378105 /* StrokesViewController.swift */,
 				044CC4DE2BFBE6D200EECFBA /* WordsCollectionCollectionViewController.swift */,
@@ -222,6 +225,7 @@
 				044CC4E52BFBE87500EECFBA /* Word.swift in Sources */,
 				0492B08B2AD99A2200FCF487 /* ViewController.swift in Sources */,
 				04D063E62BEECE1A00378105 /* StrokesViewController.swift in Sources */,
+				04B04ADF2C014402000047D1 /* TabBarController.swift in Sources */,
 				0492B0872AD99A2200FCF487 /* AppDelegate.swift in Sources */,
 				04C8DB132AE9AFB5002E6A76 /* CollectionViewCell.swift in Sources */,
 				044CC4E72BFBEFC600EECFBA /* WordModel.swift in Sources */,
@@ -382,6 +386,9 @@
 				DEVELOPMENT_TEAM = 8YA5L65S6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChineseCharacters/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "to detect your voice";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "to recognize your prononciation";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -409,6 +416,9 @@
 				DEVELOPMENT_TEAM = 8YA5L65S6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChineseCharacters/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "to detect your voice";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "to recognize your prononciation";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

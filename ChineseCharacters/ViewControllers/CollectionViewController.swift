@@ -13,10 +13,12 @@ var characters = Characters.allCases.shuffled()
 class CollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Collection"
+        self.title = "Characters"
+        self.navigationController?.navigationBar.barStyle = .black
+        self.navigationController?.navigationBar.isTranslucent=false
         let titleDict: NSDictionary = [NSAttributedString.Key.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.titleTextAttributes = titleDict as! [NSAttributedString.Key : Any]
-        self.navigationItem.setHidesBackButton(true, animated: true)
+        
                 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
