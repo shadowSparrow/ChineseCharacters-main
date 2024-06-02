@@ -17,6 +17,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
     let request = SFSpeechAudioBufferRecognitionRequest()
     var recognitionTask: SFSpeechRecognitionTask?
+    var player: AVAudioPlayer?
     
     private let characterView: UIView = {
         let view = UIView()
@@ -45,8 +46,6 @@ class WordsCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .center
         label.textColor = .white
         label.layer.cornerRadius = 5
-        //label.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        //label.layer.borderWidth = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -81,7 +80,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         button.layer.cornerRadius = 10
         button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         button.layer.borderWidth = 3
-        button.addTarget(self, action: #selector(playButtonAction), for: .touchUpInside)
+        button.addTarget(nil, action: #selector(playButtonAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -93,17 +92,34 @@ class WordsCollectionViewCell: UICollectionViewCell {
         button.layer.cornerRadius = 10
         button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         button.layer.borderWidth = 3
-        button.addTarget(self, action: #selector(speakButtonAction), for: .touchUpInside)
+        button.addTarget(nil, action: #selector(speakButtonAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     
-    func setWord(word:Word){
+    func setWord(word: Word) {
+        
+        setUISubViews()
+        
         self.word = word
         self.wordLabel.text = word.name
         self.pingYingLabel.text=word.pingYing
         self.translationLabel.text=word.translation
+        
+        if word.isFlipped {
+            flipCard(duration: 0)
+        }
+        else {
+            flipBack(duration: 0)
+            
+            
+        }
+        
+    }
+    
+    func setUISubViews() {
+        
         self.backgroundColor = .black
         self.layer.cornerRadius = 20
         self.addSubview(characterView)
@@ -114,51 +130,50 @@ class WordsCollectionViewCell: UICollectionViewCell {
         self.characterView.addSubview(playButton)
         self.characterView.addSubview(speakButton)
         
+        
+        
         // Constraints
-        characterView.widthAnchor.constraint(equalToConstant: self.frame.width-20).isActive=true
-        characterView.heightAnchor.constraint(equalToConstant: self.frame.height-30).isActive=true
-        characterView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive=true
-        
-        detailView.widthAnchor.constraint(equalToConstant: self.frame.width-20).isActive=true
-        detailView.heightAnchor.constraint(equalToConstant: self.frame.height-30).isActive=true
-        detailView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive=true
-        
-        wordLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
-        wordLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: -100).isActive=true
-        
-        pingYingLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
-        pingYingLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor).isActive=true
-        
-        translationLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
-        translationLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 50).isActive=true
-        
-        playButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100).isActive=true
-        playButton.heightAnchor.constraint(equalToConstant: 50).isActive=true
-        playButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
-        playButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 130).isActive=true
-        
-        speakButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100).isActive=true
-        speakButton.heightAnchor.constraint(equalToConstant: 50).isActive=true
-        speakButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor).isActive=true
-        speakButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 190).isActive=true
-        
-        if word.isFlipped == true {
-            UIView.transition(from: characterView, to: detailView, duration: 0, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
-            }
+        NSLayoutConstraint.activate([
             
-        }
-        else {
-            UIView.transition(from: detailView, to: characterView, duration: 0, options: [.transitionFlipFromTop,.showHideTransitionViews]) { bool in
-            }
-        }
+            characterView.widthAnchor.constraint(equalToConstant: self.frame.width-20),
+            characterView.heightAnchor.constraint(equalToConstant: self.frame.height-30),
+            characterView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            
+            detailView.widthAnchor.constraint(equalToConstant: self.frame.width-20),
+            detailView.heightAnchor.constraint(equalToConstant: self.frame.height-30),
+            detailView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            
+            wordLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            wordLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: -100),
+            
+            pingYingLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            pingYingLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor),
+            
+            translationLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            translationLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 50),
+            
+            playButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100),
+            playButton.heightAnchor.constraint(equalToConstant: 50),
+            playButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            playButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 130),
+            
+            speakButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100),
+            speakButton.heightAnchor.constraint(equalToConstant: 50),
+            speakButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            speakButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 190)
+    
+        ])
         
     }
     
-    func flipCard() {
-        UIView.transition(from: characterView, to: detailView, duration: 0.5, options: [.transitionFlipFromLeft,.showHideTransitionViews], completion: nil)
+    func flipCard(duration: Double) {
+        
+        UIView.transition(from: characterView, to: detailView, duration: duration, options: [.transitionFlipFromLeft,.showHideTransitionViews], completion: nil)
+        self.word?.isFlipped=true
     }
-    func flipBack() {
-        UIView.transition(from: detailView, to: characterView, duration: 0.5, options: [.transitionFlipFromRight,.showHideTransitionViews], completion: nil)
+    func flipBack(duration: Double) {
+        UIView.transition(from: detailView, to: characterView, duration: duration, options: [.transitionFlipFromRight,.showHideTransitionViews], completion: nil)
+        self.word?.isFlipped=false
     }
     
     @objc func playButtonAction(_ sender: Any) {
@@ -188,82 +203,107 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func speakButtonAction(_ sender: Any) {
-        UIView.animate(withDuration: 4, delay: 0, options: .beginFromCurrentState) {
-            self.speakButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-            self.pingYingLabel.isHidden = false
-            
-            let audioSession = AVAudioSession.sharedInstance()  //2
-                do
-                {
-                    try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
-                    try audioSession.setMode(AVAudioSession.Mode.default)
-                    try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
-                }
-                catch
-                {
-                    print("audioSession properties weren't set because of an error.")
-                }
-            
-            let node = self.audioEngine.inputNode
-            let recordingFormat = node.outputFormat(forBus: 0)
-            
-            node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
-                self.request.append(buffer)
-            }
-            self.audioEngine.prepare()
-                do {
-                    try self.audioEngine.start()
-                } catch{
-                    return print(error)
-                }
-            
-           
-            
-            self.recognitionTask = self.speechRecognizer?.recognitionTask(with: self.request, resultHandler: { result, error in
-                if let result = result {
-                    let bestString = result.bestTranscription.formattedString
-                    
-                    var lastString: String = ""
-                    for segment in result.bestTranscription.segments{
-                        let indexTo=bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
-                        lastString=bestString.substring(from: indexTo)
-                        print(lastString)
-                    }
-                    if bestString == self.wordLabel.text {
-                        self.checkTheColorSaid(resultString: "green")
-                    } else {
-                        self.checkTheColorSaid(resultString: "white")
-                    }
-                } else if let error = error {
-                    print(error)
-                }
-            })
-            
-        } completion: { bool in
-            
-            UIView.animate(withDuration: 1.0, delay: 0, options: .curveEaseInOut, animations: {
-                
-                self.speakButton.transform = CGAffineTransform(scaleX: 1, y: 1)
-                self.pingYingLabel.isHidden=true
-                self.stopRecording()
-                
-            })
-            
-        }
         
+        if self.speakButton.titleLabel?.text == "Recording" {
+            self.speakButton.isEnabled=false
+            
+        } else if self.speakButton.titleLabel?.text == "Speak" {
+            
+            UIView.animate(withDuration: 4, delay: 0, options: .beginFromCurrentState) {
+                self.speakButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+                self.pingYingLabel.isHidden = false
+                self.speakButton.setTitle("Recording", for: .normal)
+                
+                self.createAudioSession()
+                self.startRecording()
+                self.createRecognitionTask()
+                
+            } completion: { bool in
+                
+                UIView.animate(withDuration: 0.5, delay: 0) {
+                    self.speakButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+                    self.stopRecording()
+                    self.checkTheColorSaid(resultString: "gold")
+                } completion: { bool in
+                    self.speakButton.setTitle("Speak", for: .normal)
+                }
+            }
+        }
+    }
+    
+    func startRecording() {
+     createAudioSession()
+        startAudioEngine()
+    }
+    
+    func createAudioSession() {
+        let audioSession = AVAudioSession.sharedInstance()
+            do
+            {
+                try audioSession.setCategory(AVAudioSession.Category.playAndRecord)
+                try audioSession.setMode(AVAudioSession.Mode.default)
+                try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
+            }
+            catch
+            {
+                print("audioSession properties weren't set because of an error.")
+            }
+    }
+    
+    func createRecognitionTask() {
+        self.recognitionTask = self.speechRecognizer?.recognitionTask(with: self.request, resultHandler: { result, error in
+            if let result = result {
+                let bestString = result.bestTranscription.formattedString
+                
+                var lastString: String = ""
+                for segment in result.bestTranscription.segments{
+                    let indexTo=bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
+                    lastString=bestString.substring(from: indexTo)
+                    print(lastString)
+                    
+                }
+                if lastString == self.wordLabel.text {
+                    self.checkTheColorSaid(resultString: "green")
+                    self.pingYingLabel.isHidden=true
+                    //self.stopRecording()
+                } else {
+                    self.speakButton.titleLabel?.text = "Recording"
+                    self.checkTheColorSaid(resultString: "gold")
+                }
+            } else if let error = error {
+                print(error)
+            }
+        })
     }
     
     func checkTheColorSaid(resultString: String) {
         switch resultString{
         case "red":
-            wordLabel.textColor = .red
+            characterView.layer.borderColor = UIColor.red.cgColor
         case "green":
-            wordLabel.textColor = .green
-        case "white":
-            wordLabel.textColor = .white
+            characterView.layer.borderColor = UIColor.green.cgColor
+            playSound()
+            break
+        case "gold":
+            characterView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         default: break
         }
+    }
+    
+    func startAudioEngine() {
+        let node = self.audioEngine.inputNode
+        let recordingFormat = node.outputFormat(forBus: 0)
+        
+        node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
+            self.request.append(buffer)
+        }
+        self.audioEngine.prepare()
+            do {
+                try self.audioEngine.start()
+            } catch{
+                return print(error)
+            }
     }
     
     func stopRecording() {
@@ -271,110 +311,23 @@ class WordsCollectionViewCell: UICollectionViewCell {
                 self.request.endAudio()
                 self.recognitionTask?.cancel()
                 self.recognitionTask = nil
-                self.audioEngine.inputNode.removeTap(onBus: 0)
+                self.audioEngine.inputNode.removeTap(onBus: 1)
     }
     
-}
 
-/*
- 
- import Speech
-
- class ViewController: UIViewController, SFSpeechRecognizerDelegate {
-     
-     var audioEngine: AVAudioEngine = AVAudioEngine()
-     let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer(locale: Locale(identifier: "zh-CN"))
-     let request = SFSpeechAudioBufferRecognitionRequest()
-     var recognitionTask: SFSpeechRecognitionTask?
-     
-     private lazy var speakButton: UIButton = {
-         let button = UIButton(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 150, height: 150)))
-         button.center.x = self.view.center.x
-         button.center.y = self.view.center.y+100
-         button.backgroundColor = .black
-         button.layer.cornerRadius = 75
-         button.layer.borderWidth = 4
+  func playSound() {
+     let url = Bundle.main.url(forResource: "correct", withExtension: "mp3")!
+     do {
+         player = try AVAudioPlayer(contentsOf: url)
+         guard let player = player else { return }
+         player.numberOfLoops=0
+         player.prepareToPlay()
+         player.play()
          
-         button.layer.borderColor = UIColor.yellow.cgColor
-         button.titleLabel?.textColor = .white
-         button.setTitle("Voice", for: .normal)
-         button.addTarget(self, action: #selector(recordAndRecognizeSpeech), for: .touchUpInside)
-         return button
-     }()
-     private lazy var label: UILabel = {
-         let label = UILabel(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 300, height: 100)))
-         label.backgroundColor = .black
-         label.center.x = self.view.center.x
-         label.center.y = self.view.center.y-300
-         label.layer.cornerRadius=30
-         label.clipsToBounds = true
-         label.backgroundColor = .black
-         label.layer.borderWidth = 4
-         label.layer.borderColor = UIColor.yellow.cgColor
-         label.textAlignment = .center
-         label.font.withSize(10)
-         label.text = "你好"
-         label.textColor = .white
-         label.numberOfLines = 0
-         return label
-     }()
-     override func viewDidLoad() {
-         super.viewDidLoad()
-         self.view.backgroundColor = .black
-         setUIElements()
-         print(SFSpeechRecognizer.supportedLocales())
-     }
-     func setUIElements() {
-         self.view.addSubview(speakButton)
-         self.view.addSubview(label)
-     }
-     
-     @objc func recordAndRecognizeSpeech() {
-         let node = audioEngine.inputNode
-         let recordingFormat = node.outputFormat(forBus: 0)
          
-         node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
-             self.request.append(buffer)
-         }
-         audioEngine.prepare()
-             do {
-                 try audioEngine.start()
-             } catch{
-                 return print(error)
-             }
-         
-         guard let myReconizer = SFSpeechRecognizer() else {return}
-         if !myReconizer.isAvailable {return}
-         
-         recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, error in
-             if let result = result {
-                 let bestString = result.bestTranscription.formattedString
-                 
-                 var lastString: String = ""
-                 for segment in result.bestTranscription.segments{
-                     let indexTo=bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
-                     lastString=bestString.substring(from: indexTo)
-                 }
-                 if lastString == self.label.text {
-                     self.checkTheColorSaid(resultString: "green")
-                 } else {
-                     self.checkTheColorSaid(resultString: "red")
-                 }
-             } else if let error = error {
-                 print(error)
-             }
-         })
-     }
-     func checkTheColorSaid(resultString: String) {
-         switch resultString{
-         case "red":
-             label.backgroundColor = .red
-         case "green":
-             label.backgroundColor = .green
-         default: break
-         }
+     } catch let error as NSError {
+         print(error.description)
      }
  }
 
-
- */
+}

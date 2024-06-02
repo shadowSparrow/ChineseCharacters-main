@@ -49,10 +49,10 @@ class WordsCollectionViewController: UICollectionViewController {
                 cell.transform=CGAffineTransform.init(scaleX: 1.0, y: 1.0)
                 
                 if cell.word?.isFlipped==false {
-                    cell.flipCard()
+                    cell.flipCard(duration: 0.5)
                     cell.word?.isFlipped=true
                 } else {
-                    cell.flipBack()
+                    cell.flipBack(duration: 0.5)
                     cell.word?.isFlipped=false
                 }
             }

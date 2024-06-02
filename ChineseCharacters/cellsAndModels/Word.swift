@@ -19,7 +19,6 @@ extension Word {
         var words: [Word] = DataManager.shared.familyCharacters
         for word in words {
             let currentWord = Word(name: word.name, pingYing: word.pingYing, translation: word.translation)
-            words.append(currentWord)
         }
         return words
              }

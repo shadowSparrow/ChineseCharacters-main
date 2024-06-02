@@ -7,10 +7,15 @@
 
 import UIKit
 import Alamofire
+import WebKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
     var character: String?
+    var player: AVAudioPlayer?
+    
+    private let characterClassView: CharacterView = CharacterView()
     
     private let characterLabel: UILabel = {
         let label = UILabel()
@@ -41,7 +46,7 @@ class ViewController: UIViewController {
     
      private let characterView: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
+         view.backgroundColor = .clear
          view.layer.cornerRadius = 20
          view.layer.borderWidth = 3
          view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
@@ -103,25 +108,55 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    private lazy var button: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .clear
-        button.layer.borderWidth = 3
-        button.layer.cornerRadius = 20
-        button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        button.setTitle("Quiz", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(showQuizVC), for: .touchUpInside)
-        return button
+  
+    
+    private let webViewBackground: UIView = {
+       
+         let view = UIView()
+         view.backgroundColor = .clear
+         view.layer.cornerRadius = 20
+         view.layer.borderWidth = 3
+         view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+         view.translatesAutoresizingMaskIntoConstraints = false
+         view.isHidden=true
+        
+        return view
+        
     }()
+    
+    private lazy var webView: WKWebView = {
+        var webView = WKWebView()
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = WKUserContentController()
+        configuration.userContentController.add(self, name: "buttonOne")
+        webView = WKWebView(frame: webView.frame, configuration: configuration)
+        webView.layer.masksToBounds = true
+        webView.isOpaque = false
+        webView.layer.backgroundColor = UIColor.black.cgColor
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.layer.cornerRadius = 20
+        webView.layer.borderWidth = 0
+        webView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        return webView
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
-        setUIElements()
-        alamofireGetMethod()
+        
+        
+        //setUIElements()
+        //alamofireGetMethod()
     }
+    
+   
+    
     override func viewDidAppear(_ animated: Bool) {
-        animateLayout()
+        
+        characterClassView.setUI(view: self.view)
+        
+        //animateLayout()
     }
     
     //MARK: CreateUI
@@ -134,21 +169,41 @@ class ViewController: UIViewController {
         characterDataStackView.addArrangedSubview(radicalLabel)
         characterDataStackView.addArrangedSubview(strokesLabel)
         characterView.addSubview(characterDataStackView)
-        self.view.addSubview(button)
+        webViewBackground.addSubview(webView)
+        
+        
         self.view.addSubview(characterView)
+        self.view.addSubview(webViewBackground)
+        
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+            webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        }
+        
         
         //setConstraints
         let screenWindth = UIScreen.main.bounds.width
         let screenHeight = UIScreen.main.bounds.height
-        let viewWindth = screenWindth/1.5
-        let viewHeight = screenHeight/2.5
+        let viewWindth = screenWindth-70
+        let viewHeight = screenHeight-400
         
         NSLayoutConstraint.activate([
             
             characterView.widthAnchor.constraint(equalToConstant: viewWindth),
-            characterView.heightAnchor.constraint(equalToConstant: viewHeight),
+            characterView.heightAnchor.constraint(equalToConstant: viewHeight-50),
             characterView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            characterView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -100),
+            characterView.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: -70),
+            
+            webViewBackground.widthAnchor.constraint(equalToConstant: viewWindth),
+            webViewBackground.heightAnchor.constraint(equalToConstant: viewHeight-50),
+            webViewBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            webViewBackground.centerYAnchor.constraint(equalTo: view.centerYAnchor,constant: -70),
+            
+            webView.widthAnchor.constraint(equalTo: webViewBackground.widthAnchor),
+            webView.heightAnchor.constraint(equalTo: webViewBackground.widthAnchor,constant: -40),
+            
+            webView.centerXAnchor.constraint(equalTo: webViewBackground.centerXAnchor),
+            webView.topAnchor.constraint(equalTo: webViewBackground.topAnchor),
+            
             characterLabel.widthAnchor.constraint(equalToConstant: 200),
             characterLabel.heightAnchor.constraint(equalToConstant: 150),
             characterLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
@@ -159,22 +214,24 @@ class ViewController: UIViewController {
             readingLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
             readingLabel.topAnchor.constraint(equalTo: characterLabel.bottomAnchor),
             
-            stringsStackView.widthAnchor.constraint(equalToConstant: viewWindth),
-            stringsStackView.heightAnchor.constraint(equalToConstant: 40),
-            stringsStackView.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            stringsStackView.bottomAnchor.constraint(equalTo: characterView.bottomAnchor),
-            
             characterDataStackView.widthAnchor.constraint(equalToConstant: viewWindth),
             characterDataStackView.heightAnchor.constraint(equalToConstant: 80),
             characterDataStackView.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            characterDataStackView.bottomAnchor.constraint(equalTo: stringsStackView.topAnchor),
+            characterDataStackView.topAnchor.constraint(equalTo: readingLabel.bottomAnchor,constant: 25),
             
-            button.widthAnchor.constraint(equalToConstant: viewWindth),
-            button.heightAnchor.constraint(equalToConstant: 50),
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            button.topAnchor.constraint(equalTo: characterDataStackView.bottomAnchor,constant: 50),
+            stringsStackView.widthAnchor.constraint(equalToConstant: viewWindth),
+            stringsStackView.heightAnchor.constraint(equalToConstant: 40),
+            stringsStackView.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            stringsStackView.topAnchor.constraint(equalTo: characterDataStackView.bottomAnchor,constant: 20),
             
              ])
+
+        let viewGesture = UITapGestureRecognizer(target: self, action: #selector(flipCard))
+        characterView.addGestureRecognizer(viewGesture)
+        
+        let webViewBackgroundGesture = UITapGestureRecognizer(target: self, action: #selector(flipBack))
+        webViewBackground.addGestureRecognizer(webViewBackgroundGesture)
+        
     }
     func alamofireGetMethod() {
         guard let character = character else {return}
@@ -185,25 +242,71 @@ class ViewController: UIViewController {
             self.readingLabel.text = character.readings?.mandarinpinyin?.first
         }
     }
-    @objc func showQuizVC() {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-            self.button.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
-            self.button.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
-        }) { bool in
-            let destinationVC = StrokesViewController()
-            destinationVC.character = self.character
-            self.navigationController?.pushViewController(destinationVC, animated: true)
-            }
-    }
+   
     private func animateLayout() {
         UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
-            self.button.transform = CGAffineTransform(scaleX: 0.9 , y: 0.9)
+            
         } completion: { bool in
             UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
-                self.button.transform = CGAffineTransform(scaleX: 1 , y: 1)
+                
             }
         }
     }
+    
+    @objc func flipCard() {
+        UIView.transition(from: characterView, to: webViewBackground, duration: 0.5, options: [.transitionFlipFromLeft,.showHideTransitionViews]) { bool in
+            self.newCharacter()
+        }
+    }
+    
+    @objc func flipBack() {
+        UIView.transition(from: webViewBackground, to: characterView, duration: 0.5, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+            if self.webViewBackground.layer.borderColor == UIColor.green.cgColor {
+                self.characterView.layer.borderColor = UIColor.green.cgColor
+            }
+            
+            
+        }
+    }
+    
+     func newCharacter() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            
+        } completion: { bool in
+            self.webView.evaluateJavaScript("newCharacter('\(self.characterLabel.text ?? "水")')") { result, error in
+                if error == nil {
+                }
+            }
+        }
+    }
+    
+    func playSound() {
+       let url = Bundle.main.url(forResource: "correct", withExtension: "mp3")!
+       do {
+           player = try AVAudioPlayer(contentsOf: url)
+           guard let player = player else { return }
+           player.numberOfLoops=0
+           player.prepareToPlay()
+           player.play()
+           
+       } catch let error as NSError {
+           print(error.description)
+       }
+   }
+    
+    
 }
+
+extension ViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        playSound()
+        webViewBackground.layer.borderColor = UIColor.green.cgColor
+    }
+    
+    
+}
+
+
+
 
 

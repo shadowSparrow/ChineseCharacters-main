@@ -34,7 +34,6 @@ class CollectionViewCell: UICollectionViewCell {
     
     func setUIElemets() {
         self.addSubview(characterLabel)
-        //constraints
         characterLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         characterLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }

@@ -131,15 +131,10 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
 }
 
 /*
- 
-     
-     
      UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
          cell.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
          cell.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
      }) { bool in
          
          }
-     
- 
  */

@@ -25,21 +25,24 @@ function newCharacter(character) {
     height: 300,
     showOutline: true,
     showCharacter: true,
-    highlightCompleteColor:'#FFFFFF',
+    highlightCompleteColor:'#00FF00',
     outlineColor: '#AB8B00',
     drawingColor: '#FFFFFF',
     strokeColor: '#FFFFFF',
     showHintAfterMisses: 1,
-    highlightOnComplete: true,
-    
+    highlightOnComplete: false,
     });
     writer.quiz({
-    onComplete: function(summaryData) {
-    resetWriter();
+    onComplete: function(){
+        onClick();
     }
     });
-    //window.writer = writer
 }
+
+
+function onClick() {
+    window.webkit.messageHandlers.buttonOne.postMessage("Button One Action");
+    }
 
 function changeCharacter(newCharacter) {
     writer.setCharacter(newCharacter);
@@ -47,18 +50,5 @@ function changeCharacter(newCharacter) {
     window.writer = writer;
 }
 
-
-/*
-$(function() {
-  newWriter('人');
-    writer.quiz({
-              onComplete: function(summaryData) {
-              resetWriter();
-              }
-              });
-  window.writer = writer;
-  });
- 
-*/
 
 
