@@ -105,10 +105,35 @@ class CharacterView: UIView {
         return stackView
     }()
     
+    private let frontSideView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .clear
+        view.layer.cornerRadius = 20
+        view.layer.borderWidth = 3
+        view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+       return view
+   }()
+    
+    //MARK: BackSide
+    private let backSideView: UIView = {
+       let view = UIView()
+        view.backgroundColor = .systemMint
+        view.layer.cornerRadius = 20
+        view.layer.borderWidth = 3
+        view.isHidden = true
+        view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+       return view
+   }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUISubViews()
+        setGestures()
     }
     
     required init?(coder: NSCoder) {
@@ -131,14 +156,7 @@ class CharacterView: UIView {
     
     func setUISubViews() {
         
-        layer.cornerRadius = 20
-        layer.borderWidth = 3
-        layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        
         backgroundColor = .clear
-        layer.cornerRadius = 20
-        layer.borderWidth = 3
-        layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         
         characterReadingStackView.addArrangedSubview(characterLabel)
         characterReadingStackView.addArrangedSubview(readingLabel)
@@ -148,18 +166,47 @@ class CharacterView: UIView {
         stringsStackView.addArrangedSubview(radicalString)
         stringsStackView.addArrangedSubview(strokesString)
         characterReadingStackView.addArrangedSubview(stringsStackView)
-        addSubview(characterReadingStackView)
+        frontSideView.addSubview(characterReadingStackView)
+        addSubview(frontSideView)
+        addSubview(backSideView)
+        
         
         //Constraints
         NSLayoutConstraint.activate([
-            characterReadingStackView.widthAnchor.constraint(equalTo: widthAnchor,constant: -30),
-            characterReadingStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            characterReadingStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
             
+            characterReadingStackView.centerXAnchor.constraint(equalTo: frontSideView.centerXAnchor),
+            characterReadingStackView.centerYAnchor.constraint(equalTo: frontSideView.centerYAnchor),
+            
+            frontSideView.widthAnchor.constraint(equalTo: widthAnchor),
+            frontSideView.heightAnchor.constraint(equalTo: heightAnchor),
+            frontSideView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            frontSideView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            backSideView.widthAnchor.constraint(equalTo: widthAnchor),
+            backSideView.heightAnchor.constraint(equalTo: heightAnchor),
+            backSideView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            backSideView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        
     }
     
+    func setGestures() {
+        let frontSideGesture = UITapGestureRecognizer(target: self, action: #selector(flipCard))
+        let backSideGesture = UITapGestureRecognizer(target: self, action: #selector(flipBack))
+        frontSideView.addGestureRecognizer(frontSideGesture)
+        backSideView.addGestureRecognizer(backSideGesture)
+        
+    }
+  
+    //MARK: CardsFunctions
     
+    @objc func flipCard() {
+        UIView.transition(from: frontSideView, to: backSideView, duration: 0.5, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+        }
+    }
     
+    @objc func flipBack() {
+        UIView.transition(from: backSideView, to: frontSideView, duration: 0.5, options: [.transitionFlipFromLeft,.showHideTransitionViews]) { bool in
+
+            }
+        }
 }
