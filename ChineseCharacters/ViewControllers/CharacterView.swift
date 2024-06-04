@@ -7,8 +7,11 @@
 
 import UIKit
 import WebKit
+import AVFoundation
 
 class CharacterView: UIView {
+    
+    var player: AVAudioPlayer?
     
     private let characterLabel: UILabel = {
         let label = UILabel()
@@ -18,7 +21,7 @@ class CharacterView: UIView {
         label.backgroundColor = .clear
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 100.0)
-        label.text = "你好"
+        label.text = "好"
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -121,7 +124,7 @@ class CharacterView: UIView {
    }()
     
     //MARK: BackSide
-    /*
+    
     private lazy var webView: WKWebView = {
         var webView = WKWebView()
         let configuration = WKWebViewConfiguration()
@@ -133,11 +136,10 @@ class CharacterView: UIView {
         webView.layer.backgroundColor = UIColor.black.cgColor
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.layer.cornerRadius = 20
-        webView.layer.borderWidth = 3
+        webView.layer.borderWidth = 0
         webView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         return webView
     }()
-    */
     
     private let backSideView: UIView = {
        let view = UIView()
@@ -160,6 +162,9 @@ class CharacterView: UIView {
         super.init(frame: frame)
         setUISubViews()
         setGestures()
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+            webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -193,6 +198,7 @@ class CharacterView: UIView {
         stringsStackView.addArrangedSubview(strokesString)
         characterReadingStackView.addArrangedSubview(stringsStackView)
         frontSideView.addSubview(characterReadingStackView)
+        backSideView.addSubview(webView)
         addSubview(frontSideView)
         addSubview(backSideView)
         
@@ -208,6 +214,11 @@ class CharacterView: UIView {
             frontSideView.centerXAnchor.constraint(equalTo: centerXAnchor),
             frontSideView.centerYAnchor.constraint(equalTo: centerYAnchor),
             
+            webView.centerXAnchor.constraint(equalTo: backSideView.centerXAnchor),
+            webView.topAnchor.constraint(equalTo: backSideView.topAnchor),
+            webView.widthAnchor.constraint(equalTo: backSideView.widthAnchor),
+            webView.heightAnchor.constraint(equalTo: backSideView.heightAnchor,constant: -100),
+            
             backSideView.widthAnchor.constraint(equalTo: widthAnchor),
             backSideView.heightAnchor.constraint(equalTo: heightAnchor),
             backSideView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -222,11 +233,21 @@ class CharacterView: UIView {
         backSideView.addGestureRecognizer(backSideGesture)
         
     }
-  
+    
+    
+    
     //MARK: CardsFunctions
+    func setWebView() {
+        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
+            webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+        }
+    }
+    
+        
     
     @objc func flipCard() {
         UIView.transition(from: frontSideView, to: backSideView, duration: 0.5, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+            self.newCharacter()
         }
     }
     
@@ -235,4 +256,36 @@ class CharacterView: UIView {
 
             }
         }
+    
+    func newCharacter() {
+       UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+           
+       } completion: { bool in
+           self.webView.evaluateJavaScript("newCharacter('\(self.characterLabel.text ?? "水")')") { result, error in
+               if error == nil {
+               }
+           }
+       }
+   }
+    
+    func playSound() {
+       let url = Bundle.main.url(forResource: "correct", withExtension: "mp3")!
+       do {
+           player = try AVAudioPlayer(contentsOf: url)
+           guard let player = player else { return }
+           player.numberOfLoops=0
+           player.prepareToPlay()
+           player.play()
+           
+       } catch let error as NSError {
+           print(error.description)
+       }
+   }
+    
+}
+extension CharacterView: WKScriptMessageHandler {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        playSound()
+        frontSideView.layer.borderColor = UIColor.green.cgColor
+    }
 }
