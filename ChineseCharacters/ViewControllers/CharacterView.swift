@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 
 class CharacterView: UIView {
     
@@ -107,24 +108,49 @@ class CharacterView: UIView {
     
     private let frontSideView: UIView = {
        let view = UIView()
-        view.backgroundColor = .clear
+        view.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
         view.layer.cornerRadius = 20
         view.layer.borderWidth = 3
-        view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        
+        view.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.3)
+        view.layer.shadowColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 1)
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 30
         view.translatesAutoresizingMaskIntoConstraints = false
        return view
    }()
     
     //MARK: BackSide
+    /*
+    private lazy var webView: WKWebView = {
+        var webView = WKWebView()
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = WKUserContentController()
+        configuration.userContentController.add(self, name: "buttonOne")
+        webView = WKWebView(frame: webView.frame, configuration: configuration)
+        webView.layer.masksToBounds = true
+        webView.isOpaque = false
+        webView.layer.backgroundColor = UIColor.black.cgColor
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.layer.cornerRadius = 20
+        webView.layer.borderWidth = 3
+        webView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        return webView
+    }()
+    */
+    
     private let backSideView: UIView = {
        let view = UIView()
-        view.backgroundColor = .systemMint
+        
+        view.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
         view.layer.cornerRadius = 20
         view.layer.borderWidth = 3
+        view.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.3)
+        view.layer.shadowColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 1)
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = .zero
+        view.layer.shadowRadius = 30
         view.isHidden = true
-        view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        
         view.translatesAutoresizingMaskIntoConstraints = false
        return view
    }()
@@ -156,7 +182,7 @@ class CharacterView: UIView {
     
     func setUISubViews() {
         
-        backgroundColor = .clear
+        backgroundColor = .black
         
         characterReadingStackView.addArrangedSubview(characterLabel)
         characterReadingStackView.addArrangedSubview(readingLabel)

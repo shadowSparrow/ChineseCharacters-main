@@ -135,7 +135,7 @@ class ViewController: UIViewController {
         webView.layer.backgroundColor = UIColor.black.cgColor
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.layer.cornerRadius = 20
-        webView.layer.borderWidth = 0
+        webView.layer.borderWidth = 3
         webView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         return webView
     }()
