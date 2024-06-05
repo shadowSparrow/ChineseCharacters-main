@@ -16,7 +16,7 @@ class CharacterView: UIView {
     private let characterLabel: UILabel = {
         let label = UILabel()
         label.layer.masksToBounds = true
-        label.layer.cornerRadius = 5
+        label.layer.cornerRadius = 10
         label.textColor = .white
         label.backgroundColor = .clear
         label.textAlignment = .center
@@ -43,6 +43,7 @@ class CharacterView: UIView {
     private let characterReadingStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.layer.cornerRadius = 10
         stackView.layer.backgroundColor = UIColor.clear.cgColor
         stackView.spacing = 30
         stackView.distribution = .fill
@@ -111,14 +112,11 @@ class CharacterView: UIView {
     
     private let frontSideView: UIView = {
        let view = UIView()
+        view.layer.masksToBounds = true
         view.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
-        view.layer.cornerRadius = 20
-        view.layer.borderWidth = 3
+        view.layer.cornerRadius = 10
+        view.layer.borderWidth = 0
         view.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.3)
-        view.layer.shadowColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 1)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 30
         view.translatesAutoresizingMaskIntoConstraints = false
        return view
    }()
@@ -135,7 +133,7 @@ class CharacterView: UIView {
         webView.isOpaque = false
         webView.layer.backgroundColor = UIColor.black.cgColor
         webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.layer.cornerRadius = 20
+        webView.layer.cornerRadius = 10
         webView.layer.borderWidth = 0
         webView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         return webView
@@ -143,28 +141,21 @@ class CharacterView: UIView {
     
     private let backSideView: UIView = {
        let view = UIView()
-        
+        view.layer.masksToBounds = true
         view.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
-        view.layer.cornerRadius = 20
-        view.layer.borderWidth = 3
+        view.layer.cornerRadius = 10
+        view.layer.borderWidth = 0
         view.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.3)
-        view.layer.shadowColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 1)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 30
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
        return view
    }()
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUISubViews()
         setGestures()
-        if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
-            webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
-        }
+        setWebView()
     }
     
     required init?(coder: NSCoder) {
@@ -188,6 +179,12 @@ class CharacterView: UIView {
     func setUISubViews() {
         
         backgroundColor = .black
+        layer.cornerRadius = 20
+        layer.shadowColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 1)
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = .zero
+        layer.shadowRadius = 30
+        layer.masksToBounds = false
         
         characterReadingStackView.addArrangedSubview(characterLabel)
         characterReadingStackView.addArrangedSubview(readingLabel)
@@ -234,8 +231,6 @@ class CharacterView: UIView {
         
     }
     
-    
-    
     //MARK: CardsFunctions
     func setWebView() {
         if let url = Bundle.main.url(forResource: "index", withExtension: "html") {
@@ -243,19 +238,41 @@ class CharacterView: UIView {
         }
     }
     
-        
-    
     @objc func flipCard() {
-        UIView.transition(from: frontSideView, to: backSideView, duration: 0.5, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
-            self.newCharacter()
+
+        UIView.animate(withDuration: 0.5) {
+            self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        } completion: { bool in
+            
+            UIView.transition(from: self.frontSideView, to: self.backSideView, duration: 0.7, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+                self.newCharacter()
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            }
+           
         }
-    }
+}
     
     @objc func flipBack() {
-        UIView.transition(from: backSideView, to: frontSideView, duration: 0.5, options: [.transitionFlipFromLeft,.showHideTransitionViews]) { bool in
-
+        UIView.animate(withDuration: 0.5) {
+            self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        } completion: { bool in
+            
+            UIView.transition(from: self.backSideView, to: self.frontSideView, duration: 0.7, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            }
+            
+        }
+}
+    
+    private func animateLayout() {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+            self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        } completion: { bool in
+            UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
+                self.transform = CGAffineTransform(scaleX: 1, y: 1)
             }
         }
+    }
     
     func newCharacter() {
        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
@@ -283,9 +300,10 @@ class CharacterView: UIView {
    }
     
 }
+
 extension CharacterView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         playSound()
-        frontSideView.layer.borderColor = UIColor.green.cgColor
+        layer.shadowColor = UIColor.green.cgColor
     }
 }

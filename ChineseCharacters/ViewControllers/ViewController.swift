@@ -144,8 +144,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
-        
-        characterClassView.setWebView()
         //setUIElements()
         //alamofireGetMethod()
     }
@@ -242,16 +240,17 @@ class ViewController: UIViewController {
             self.readingLabel.text = character.readings?.mandarinpinyin?.first
         }
     }
-   
+   /*
     private func animateLayout() {
         UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
-            
+            transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
         } completion: { bool in
             UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
-                
+                transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
             }
         }
     }
+    */
     
     @objc func flipCard() {
         UIView.transition(from: characterView, to: webViewBackground, duration: 0.5, options: [.transitionFlipFromLeft,.showHideTransitionViews]) { bool in
