@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CollectionViewCell: UICollectionViewCell {
+class CharacterCell: UICollectionViewCell {
      lazy var characterLabel: UILabel = {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
         label.textColor = .white
@@ -20,11 +20,14 @@ class CollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         
         super.init(frame: frame)
+        
         self.layer.cornerRadius = 20
         self.layer.borderWidth = 3
-        self.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        self.backgroundColor = .black
+        self.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.5)
+        self.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
         
+        
+        //self.contentView
         setUIElemets()
         
     }

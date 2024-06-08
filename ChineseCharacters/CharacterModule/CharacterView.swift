@@ -12,16 +12,16 @@ import AVFoundation
 class CharacterView: UIView {
     
     var player: AVAudioPlayer?
+    var character: String?
     
     private let characterLabel: UILabel = {
         let label = UILabel()
-        label.layer.masksToBounds = true
+        //label.layer.masksToBounds = true
         label.layer.cornerRadius = 10
         label.textColor = .white
         label.backgroundColor = .clear
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 100.0)
-        label.text = "好"
+        label.font = UIFont.systemFont(ofSize: 120.0)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -29,13 +29,13 @@ class CharacterView: UIView {
     
     private let readingLabel: UILabel = {
         let label = UILabel()
-        label.layer.masksToBounds = true
+        //label.layer.masksToBounds = true
         label.layer.cornerRadius = 5
         label.textColor = .white
         label.backgroundColor = .clear
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 36.0)
-        label.text = "nihao"
+        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -57,7 +57,7 @@ class CharacterView: UIView {
         label.font = UIFont.systemFont(ofSize: 50)
         label.backgroundColor = .clear
         label.textColor = .white
-        label.text = "人"
+    
         return label
     }()
     private let strokesLabel: UILabel = {
@@ -66,7 +66,7 @@ class CharacterView: UIView {
         label.font = UIFont.systemFont(ofSize: 50)
         label.backgroundColor = .clear
         label.textColor = .white
-        label.text = "4"
+    
         return label
     }()
     
@@ -74,7 +74,7 @@ class CharacterView: UIView {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.layer.backgroundColor = UIColor.clear.cgColor
-        stackView.spacing = 0
+        stackView.spacing = 100
         stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -103,7 +103,8 @@ class CharacterView: UIView {
     private let stringsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 0
+        stackView.backgroundColor = .clear
+        stackView.spacing = 100
         stackView.distribution = .fillEqually
         stackView.isHidden = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -115,7 +116,7 @@ class CharacterView: UIView {
         view.layer.masksToBounds = true
         view.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
         view.layer.cornerRadius = 10
-        view.layer.borderWidth = 0
+        view.layer.borderWidth = 3
         view.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.3)
         view.translatesAutoresizingMaskIntoConstraints = false
        return view
@@ -131,7 +132,7 @@ class CharacterView: UIView {
         webView = WKWebView(frame: webView.frame, configuration: configuration)
         webView.layer.masksToBounds = true
         webView.isOpaque = false
-        webView.layer.backgroundColor = UIColor.black.cgColor
+        webView.backgroundColor = .clear
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.layer.cornerRadius = 10
         webView.layer.borderWidth = 0
@@ -144,7 +145,7 @@ class CharacterView: UIView {
         view.layer.masksToBounds = true
         view.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
         view.layer.cornerRadius = 10
-        view.layer.borderWidth = 0
+        view.layer.borderWidth = 3
         view.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.3)
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +157,7 @@ class CharacterView: UIView {
         setUISubViews()
         setGestures()
         setWebView()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -176,14 +178,20 @@ class CharacterView: UIView {
         centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive=true
     }
     
+    func configure(character: String) {
+        self.character=character
+        alamofireGetMethod()
+    }
+    
+    
     func setUISubViews() {
         
         backgroundColor = .black
         layer.cornerRadius = 20
         layer.shadowColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 1)
-        layer.shadowOpacity = 0.5
+        layer.shadowOpacity = 0.4
         layer.shadowOffset = .zero
-        layer.shadowRadius = 30
+        layer.shadowRadius = 25
         layer.masksToBounds = false
         
         characterReadingStackView.addArrangedSubview(characterLabel)
@@ -240,25 +248,32 @@ class CharacterView: UIView {
     
     @objc func flipCard() {
 
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.2) {
             self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
         } completion: { bool in
+            self.newCharacter()
             
-            UIView.transition(from: self.frontSideView, to: self.backSideView, duration: 0.7, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
-                self.newCharacter()
-                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            UIView.transition(from: self.frontSideView, to: self.backSideView, duration: 0.5, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+                
+                UIView.animate(withDuration: 0.3) {
+                    self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                    self.playSound(name: "cardFlip")
+                }
+                
             }
            
         }
 }
     
     @objc func flipBack() {
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.2) {
             self.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
         } completion: { bool in
-            
-            UIView.transition(from: self.backSideView, to: self.frontSideView, duration: 0.7, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
-                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+            UIView.transition(from: self.backSideView, to: self.frontSideView, duration: 0.3, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
+                UIView.animate(withDuration: 0.3) {
+                    self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                    self.playSound(name: "cardFlip")
+                }
             }
             
         }
@@ -274,19 +289,33 @@ class CharacterView: UIView {
         }
     }
     
+    
+    func alamofireGetMethod() {
+        
+        guard let character=character else {return}
+        NetworkingManager.shared.alamofireGetMethod(character: character) { character in
+            self.characterLabel.text = character.char
+            self.radicalLabel.text = character.radical
+            self.strokesLabel.text = character.totalstrokes
+            self.readingLabel.text = character.readings?.mandarinpinyin?.first
+        }
+    }
+    
+    
     func newCharacter() {
+        guard let character=character else {return}
        UIView.animate(withDuration: 0.2, delay: 0, options: .beginFromCurrentState) {
            
        } completion: { bool in
-           self.webView.evaluateJavaScript("newCharacter('\(self.characterLabel.text ?? "水")')") { result, error in
+           self.webView.evaluateJavaScript("newCharacter('\(character)')") { result, error in
                if error == nil {
                }
            }
        }
    }
     
-    func playSound() {
-       let url = Bundle.main.url(forResource: "correct", withExtension: "mp3")!
+    func playSound(name: String) {
+       let url = Bundle.main.url(forResource: name, withExtension: "mp3")!
        do {
            player = try AVAudioPlayer(contentsOf: url)
            guard let player = player else { return }
@@ -298,12 +327,13 @@ class CharacterView: UIView {
            print(error.description)
        }
    }
-    
 }
 
 extension CharacterView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        playSound()
+        playSound(name: "correct")
         layer.shadowColor = UIColor.green.cgColor
+        frontSideView.layer.borderColor = CGColor(red: 0, green: 4, blue: 0, alpha: 0.4)
+        backSideView.layer.borderColor = CGColor(red: 0, green: 4, blue: 0, alpha: 0.4)
     }
 }

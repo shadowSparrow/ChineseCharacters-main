@@ -8,9 +8,9 @@
 import UIKit
 
 private let reuseIdentifier = "Cell"
-var characters = Characters.allCases.shuffled()
+private var characters = Characters.allCases.shuffled()
 
-class CollectionViewController: UICollectionViewController {
+class CharacterCollectionVC: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Characters"
@@ -50,13 +50,6 @@ class CollectionViewController: UICollectionViewController {
     
 
     // MARK: UICollectionViewDataSource
-
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
         return characters.count
@@ -81,7 +74,7 @@ class CollectionViewController: UICollectionViewController {
             cell.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
             cell.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
         }) { bool in
-            let destinationVC = ViewController()
+            let destinationVC = CharacterVC()
             destinationVC.character = cell.characterLabel.text ?? "Nil passed"
             self.navigationController?.pushViewController(destinationVC, animated: true)
             }
@@ -103,7 +96,7 @@ class CollectionViewController: UICollectionViewController {
     
 }
 
-extension CollectionViewController: UICollectionViewDelegateFlowLayout {
+extension CharacterCollectionVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
@@ -130,11 +123,3 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-/*
-     UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
-         cell.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
-         cell.transform = CGAffineTransform.init(scaleX: 0.9, y: 0.9)
-     }) { bool in
-         
-         }
- */
