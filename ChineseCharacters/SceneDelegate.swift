@@ -11,16 +11,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
         let layout = UICollectionViewFlowLayout()
-        let rootVC = WordsCollectionViewController(collectionViewLayout: layout)
+        let rootVC = CharacterCollectionVC(collectionViewLayout: layout)
         let navigationController = UINavigationController(rootViewController: rootVC)
         
-        window?.rootViewController = TabBarController()
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 

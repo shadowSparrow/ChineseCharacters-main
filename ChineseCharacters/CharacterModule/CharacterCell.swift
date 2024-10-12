@@ -26,8 +26,6 @@ class CharacterCell: UICollectionViewCell {
         self.layer.borderColor = CGColor(srgbRed: 0.5, green: 0.1, blue: 0.5, alpha: 0.5)
         self.layer.backgroundColor = CGColor(red: 0, green: 0, blue: 20, alpha: 0.1)
         
-        
-        //self.contentView
         setUIElemets()
         
     }

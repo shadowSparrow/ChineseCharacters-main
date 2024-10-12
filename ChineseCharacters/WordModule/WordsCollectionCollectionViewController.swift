@@ -1,11 +1,10 @@
 import UIKit
-import AVFoundation
 
+
+/*
 private let reuseIdentifier = "cell"
 
 class WordsCollectionViewController: UICollectionViewController {
-    
-    //@IBOutlet weak var pageControl: UIPageControl!
     
     var currentPage: Int = 0
     var words: [Word] = Word.getWords()
@@ -50,9 +49,11 @@ class WordsCollectionViewController: UICollectionViewController {
                 
                 if cell.word?.isFlipped==false {
                     cell.flipCard(duration: 0.5)
+                    SoundManager.shared.playSound(name: Sounds.flip.rawValue)
                     cell.word?.isFlipped=true
                 } else {
                     cell.flipBack(duration: 0.5)
+                    SoundManager.shared.playSound(name: Sounds.flip.rawValue)
                     cell.word?.isFlipped=false
                 }
             }
@@ -69,7 +70,7 @@ class WordsCollectionViewController: UICollectionViewController {
 extension WordsCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let windth = collectionView.frame.width
-        let height = UIScreen.main.bounds.height-300
+        let height = UIScreen.main.bounds.height-400
         return CGSize(width: windth, height: height)
     }
     
@@ -77,3 +78,4 @@ extension WordsCollectionViewController: UICollectionViewDelegateFlowLayout {
         0
     }
 }
+*/

@@ -11,12 +11,12 @@ import AVFoundation
 
 class CharacterView: UIView {
     
-    var player: AVAudioPlayer?
     var character: String?
+    var greenBool: Bool? = false
     
     private let characterLabel: UILabel = {
         let label = UILabel()
-        //label.layer.masksToBounds = true
+        
         label.layer.cornerRadius = 10
         label.textColor = .white
         label.backgroundColor = .clear
@@ -29,7 +29,7 @@ class CharacterView: UIView {
     
     private let readingLabel: UILabel = {
         let label = UILabel()
-        //label.layer.masksToBounds = true
+        
         label.layer.cornerRadius = 5
         label.textColor = .white
         label.backgroundColor = .clear
@@ -179,6 +179,14 @@ class CharacterView: UIView {
     }
     
     func configure(character: String) {
+        
+        let colorBool =  UserDefaults.standard.bool(forKey: character)
+        self.greenBool = colorBool
+        
+        if self.greenBool == true {
+            layer.shadowColor = UIColor.green.cgColor
+        }
+        
         self.character=character
         alamofireGetMethod()
     }
@@ -257,7 +265,7 @@ class CharacterView: UIView {
                 
                 UIView.animate(withDuration: 0.3) {
                     self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                    self.playSound(name: "cardFlip")
+                    SoundManager.shared.playSound(name: "cardFlip")
                 }
                 
             }
@@ -272,7 +280,7 @@ class CharacterView: UIView {
             UIView.transition(from: self.backSideView, to: self.frontSideView, duration: 0.3, options: [.transitionFlipFromRight,.showHideTransitionViews]) { bool in
                 UIView.animate(withDuration: 0.3) {
                     self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
-                    self.playSound(name: "cardFlip")
+                    SoundManager.shared.playSound(name: "cardFlip")
                 }
             }
             
@@ -313,27 +321,22 @@ class CharacterView: UIView {
            }
        }
    }
-    
-    func playSound(name: String) {
-       let url = Bundle.main.url(forResource: name, withExtension: "mp3")!
-       do {
-           player = try AVAudioPlayer(contentsOf: url)
-           guard let player = player else { return }
-           player.numberOfLoops=0
-           player.prepareToPlay()
-           player.play()
-           
-       } catch let error as NSError {
-           print(error.description)
-       }
-   }
 }
 
 extension CharacterView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        playSound(name: "correct")
-        layer.shadowColor = UIColor.green.cgColor
-        frontSideView.layer.borderColor = CGColor(red: 0, green: 4, blue: 0, alpha: 0.4)
-        backSideView.layer.borderColor = CGColor(red: 0, green: 4, blue: 0, alpha: 0.4)
+        SoundManager.shared.playSound(name: "correct")
+        
+        if greenBool == false {
+            layer.shadowColor = UIColor.green.cgColor
+            greenBool=true
+            UserDefaults.standard.set(greenBool, forKey: character ?? "十")
+            print(greenBool)
+        }
+
+        
     }
 }
+
+
+

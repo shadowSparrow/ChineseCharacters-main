@@ -13,9 +13,9 @@ class DataManager {
     var imageNames = ["Education","brain", "gamecontroller"]
     var labelNames = ["Cards","Exercises","Games"]
     
-    
+    /*
     var topicNames: [Topics] = [.Family,.Travel,.Education,.Objects, .Food, .Persons,.Count,.Numbers,.Time,.Locations,.Adjectives,.Phrazes,.Actions,.Particles]
-    
+    */
     var familyCharacters: [Word] = [
         Word(name: "爸爸", pingYing: "bàba", translation: "father" ),
         Word(name: "家",  pingYing: "jiā", translation: "family"),

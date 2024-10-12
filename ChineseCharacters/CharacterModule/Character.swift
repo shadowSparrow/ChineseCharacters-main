@@ -8,14 +8,13 @@
 import Foundation
 import Alamofire
 
-//  Alamofire gitCheck
-struct Character: Decodable {
+struct Character: Codable {
     let char: String?
     let radical: String?
     let readings: Reading?
     let totalstrokes: String?
 }
-struct Reading: Decodable {
+struct Reading: Codable {
     let mandarinpinyin: [String]?
 }
 

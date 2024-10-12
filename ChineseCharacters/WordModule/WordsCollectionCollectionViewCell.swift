@@ -4,6 +4,8 @@
 //
 //  Created by mac on 20.05.2024.
 //
+
+/*
 import UIKit
 import AVFoundation
 import Speech
@@ -21,20 +23,22 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     private let characterView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
-        view.layer.cornerRadius = 20
-        view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        view.layer.borderWidth = 5
+        view.layer.backgroundColor = Colors.background
+        view.layer.cornerRadius = 10
+        view.layer.borderColor = Colors.border
+        view.layer.borderWidth = 2
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private let detailView: UIView = {
         let view = UIView()
-        view.backgroundColor = .green
-        view.layer.cornerRadius = 20
-        view.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        view.layer.borderWidth = 5
+        view.layer.backgroundColor = Colors.background
+        view.layer.cornerRadius = 10
+        view.layer.borderColor = Colors.border
+        view.layer.borderWidth = 2
+      
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -42,7 +46,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     private let wordLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.font = UIFont.systemFont(ofSize: 120)
+        label.font = UIFont.systemFont(ofSize: 100)
         label.textAlignment = .center
         label.textColor = .white
         label.layer.cornerRadius = 5
@@ -50,17 +54,19 @@ class WordsCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let pingYingLabel: UILabel = {
+    private let detailWordLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
-        label.font = UIFont.systemFont(ofSize: 40)
+        label.font = UIFont.systemFont(ofSize: 120)
+        let color = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
+        label.textColor = UIColor(cgColor: color)
         label.textAlignment = .center
-        label.isHidden=true
-        label.textColor = .white
+        label.layer.cornerRadius = 5
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+   
     private let translationLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = .clear
@@ -68,30 +74,46 @@ class WordsCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .center
         let color = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
         label.textColor = UIColor(cgColor: color)
-        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let playButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .clear
+        button.layer.backgroundColor = UIColor.clear.cgColor
         button.setTitle("Play", for: .normal)
         button.layer.cornerRadius = 10
-        button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        button.layer.borderWidth = 3
+        button.layer.borderColor = Colors.border
+        button.layer.borderWidth = 1
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 40)
+        button.layer.shadowColor = UIColor.white.cgColor
+        button.layer.shadowOpacity = 1
+        button.layer.shadowOffset = .zero
+        button.layer.shadowRadius = 30
         button.addTarget(nil, action: #selector(playButtonAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    private let vStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.layer.cornerRadius = 10
+        stackView.layer.backgroundColor = UIColor.clear.cgColor
+        stackView.spacing = 30
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     private let speakButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
-        button.setTitle("Speak", for: .normal)
-        button.layer.cornerRadius = 10
-        button.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
-        button.layer.borderWidth = 3
+        button.setTitle("SPEAK", for: .normal)
+        button.layer.cornerRadius = 5
+        
+        button.layer.borderColor = Colors.border
+        button.layer.borderWidth = 1
         button.addTarget(nil, action: #selector(speakButtonAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -104,15 +126,16 @@ class WordsCollectionViewCell: UICollectionViewCell {
         
         self.word = word
         self.wordLabel.text = word.name
-        self.pingYingLabel.text=word.pingYing
+        self.detailWordLabel.text = word.name
+        self.playButton.setTitle(word.pingYing, for: .normal)
         self.translationLabel.text=word.translation
         
         if word.isFlipped {
             flipCard(duration: 0)
+            
         }
         else {
             flipBack(duration: 0)
-            
             
         }
         
@@ -120,47 +143,45 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     func setUISubViews() {
         
-        self.backgroundColor = .black
-        self.layer.cornerRadius = 20
+        self.backgroundColor = .clear
+        self.layer.cornerRadius = 10
+        
+        
+        vStackView.addArrangedSubview(wordLabel)
+        vStackView.addArrangedSubview(playButton)
+        vStackView.addArrangedSubview(translationLabel)
+        
+        characterView.addSubview(vStackView)
         self.addSubview(characterView)
+        
+        
         self.addSubview(detailView)
-        self.characterView.addSubview(wordLabel)
-        self.characterView.addSubview(pingYingLabel)
-        self.characterView.addSubview(translationLabel)
-        self.characterView.addSubview(playButton)
-        self.characterView.addSubview(speakButton)
+        self.detailView.addSubview(speakButton)
+        self.detailView.addSubview(detailWordLabel)
         
-        
-        
+        let screenWindth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
         // Constraints
         NSLayoutConstraint.activate([
             
-            characterView.widthAnchor.constraint(equalToConstant: self.frame.width-20),
-            characterView.heightAnchor.constraint(equalToConstant: self.frame.height-30),
+            characterView.widthAnchor.constraint(equalToConstant: screenWindth-70),
+            characterView.heightAnchor.constraint(equalToConstant: screenHeight/1.9),
             characterView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            detailView.widthAnchor.constraint(equalToConstant: self.frame.width-20),
-            detailView.heightAnchor.constraint(equalToConstant: self.frame.height-30),
+            detailView.widthAnchor.constraint(equalToConstant: screenWindth-70),
+            detailView.heightAnchor.constraint(equalToConstant: screenHeight/1.9),
             detailView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             
-            wordLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            wordLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: -100),
+            vStackView.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
+            vStackView.centerYAnchor.constraint(equalTo: characterView.centerYAnchor),
             
-            pingYingLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            pingYingLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor),
+            detailWordLabel.centerXAnchor.constraint(equalTo: detailView.centerXAnchor),
+            detailWordLabel.centerYAnchor.constraint(equalTo: detailView.centerYAnchor,constant: -100),
             
-            translationLabel.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            translationLabel.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 50),
-            
-            playButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100),
-            playButton.heightAnchor.constraint(equalToConstant: 50),
-            playButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            playButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 130),
-            
-            speakButton.widthAnchor.constraint(equalTo: characterView.widthAnchor,constant: -100),
-            speakButton.heightAnchor.constraint(equalToConstant: 50),
-            speakButton.centerXAnchor.constraint(equalTo: characterView.centerXAnchor),
-            speakButton.centerYAnchor.constraint(equalTo: characterView.centerYAnchor,constant: 190)
+            speakButton.widthAnchor.constraint(equalTo: detailView.widthAnchor,constant: -200),
+            speakButton.heightAnchor.constraint(equalTo:speakButton.widthAnchor),
+            speakButton.centerXAnchor.constraint(equalTo: detailView.centerXAnchor),
+            speakButton.centerYAnchor.constraint(equalTo: detailView.centerYAnchor,constant: 50)
     
         ])
         
@@ -168,11 +189,12 @@ class WordsCollectionViewCell: UICollectionViewCell {
     
     func flipCard(duration: Double) {
         
-        UIView.transition(from: characterView, to: detailView, duration: duration, options: [.transitionFlipFromLeft,.showHideTransitionViews], completion: nil)
+        UIView.transition(from: characterView, to: detailView, duration: duration, options: [.transitionFlipFromRight,.showHideTransitionViews], completion: nil)
         self.word?.isFlipped=true
+        
     }
     func flipBack(duration: Double) {
-        UIView.transition(from: detailView, to: characterView, duration: duration, options: [.transitionFlipFromRight,.showHideTransitionViews], completion: nil)
+        UIView.transition(from: detailView, to: characterView, duration: duration, options: [.transitionFlipFromLeft,.showHideTransitionViews], completion: nil)
         self.word?.isFlipped=false
     }
     
@@ -180,7 +202,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
         
         UIView.animate(withDuration: 0.5, delay: 0, options: .beginFromCurrentState) {
             self.playButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-            self.pingYingLabel.isHidden=false
+            
             let utterance = AVSpeechUtterance(string: self.wordLabel.text ?? "风景")
             utterance.voice = AVSpeechSynthesisVoice(language: "zh-CN")
             utterance.rate = 0.1
@@ -194,7 +216,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
                 UIView.animate(withDuration: 1,  animations:  {
                 }) { bool in
                     UIView.animate(withDuration: 0.2, delay: 2.0) {
-                        self.pingYingLabel.isHidden=true
+                        
                         
                     }
                 }
@@ -207,11 +229,11 @@ class WordsCollectionViewCell: UICollectionViewCell {
         if self.speakButton.titleLabel?.text == "Recording" {
             self.speakButton.isEnabled=false
             
-        } else if self.speakButton.titleLabel?.text == "Speak" {
+        } else if self.speakButton.titleLabel?.text == "SPEAK" {
             
             UIView.animate(withDuration: 4, delay: 0, options: .beginFromCurrentState) {
                 self.speakButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
-                self.pingYingLabel.isHidden = false
+                
                 self.speakButton.setTitle("Recording", for: .normal)
                 
                 self.createAudioSession()
@@ -225,7 +247,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
                     self.stopRecording()
                     self.checkTheColorSaid(resultString: "gold")
                 } completion: { bool in
-                    self.speakButton.setTitle("Speak", for: .normal)
+                    self.speakButton.setTitle("SPEAK", for: .normal)
                 }
             }
         }
@@ -265,8 +287,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
                 }
                 if lastString == self.wordLabel.text {
                     self.checkTheColorSaid(resultString: "green")
-                    self.pingYingLabel.isHidden=true
-                    //self.stopRecording()
+                    
                 } else {
                     self.speakButton.titleLabel?.text = "Recording"
                     self.checkTheColorSaid(resultString: "gold")
@@ -283,7 +304,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
             characterView.layer.borderColor = UIColor.red.cgColor
         case "green":
             characterView.layer.borderColor = UIColor.green.cgColor
-            playSound()
+            SoundManager.shared.playSound(name: "correct")
             break
         case "gold":
             characterView.layer.borderColor = CGColor(red: 171, green: 139, blue: 0, alpha: 0.6)
@@ -315,19 +336,7 @@ class WordsCollectionViewCell: UICollectionViewCell {
     }
     
 
-  func playSound() {
-     let url = Bundle.main.url(forResource: "correct", withExtension: "mp3")!
-     do {
-         player = try AVAudioPlayer(contentsOf: url)
-         guard let player = player else { return }
-         player.numberOfLoops=0
-         player.prepareToPlay()
-         player.play()
-         
-         
-     } catch let error as NSError {
-         print(error.description)
-     }
- }
+  
 
 }
+*/

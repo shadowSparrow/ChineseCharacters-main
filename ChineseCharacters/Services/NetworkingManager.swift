@@ -34,5 +34,15 @@ class NetworkingManager {
                 }
             }
     }
+    
+    func getFetchAllChracters() {
+        let characters = Characters.allCases
+        for character in characters {
+            let escapedString = character.rawValue.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            guard let escapedString = escapedString else {return}
+            let characterLink = Links.charactersLink.rawValue+escapedString
+            
+        }
+    }
 }
 

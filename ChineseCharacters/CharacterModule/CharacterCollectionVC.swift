@@ -24,7 +24,7 @@ class CharacterCollectionVC: UICollectionViewController {
         layout.scrollDirection = .vertical
         self.collectionView.collectionViewLayout = layout
         self.collectionView.backgroundColor = .black
-        self.collectionView!.register(CollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView!.register(CharacterCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(pressGestureAction))
         collectionView.addGestureRecognizer(longPressGesture)
     }
@@ -56,7 +56,7 @@ class CharacterCollectionVC: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CharacterCell
         cell.characterLabel.text = characters[indexPath.row].rawValue
         return cell
     }
@@ -68,7 +68,7 @@ class CharacterCollectionVC: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! CollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as! CharacterCell
         
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
             cell.transform = CGAffineTransform.init(scaleX: 1.0, y: 1.0)
@@ -122,4 +122,6 @@ extension CharacterCollectionVC: UICollectionViewDelegateFlowLayout {
         10
     }
 }
+
+
 
